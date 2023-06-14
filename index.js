@@ -5,7 +5,7 @@ const bodyParser= require ('body-parser')
 const mongoose= require ("mongoose");
 const routes=require('./routes/routes')
 const app= express()
-
+const PORT = process.env.PORT || 3000
 
 
 const mongoString = process.env.DATABASE_URL
@@ -24,6 +24,6 @@ app.use('/api',routes)
 app.use(express.json());
 
 
-app.listen(3000,()=>{
+app.listen(PORT,()=>{
           console.log(`Server started at ${3000}`)
 })

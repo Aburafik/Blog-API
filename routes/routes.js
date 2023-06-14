@@ -23,7 +23,7 @@ router.post("/post", upload.single
                     folder: "BLOG", // Specify the folder name in Cloudinary
                     use_filename: true // Use the original filename when saving to Cloudinary
           };
-          const cloudinaryResponse = await cloudnary.uploader.upload(image.path, uploadOptions); // Upload the image to Cloudinary
+          const cloudinaryResponse = await cloudnary.uploader.upload(image.path.name, uploadOptions); // Upload the image to Cloudinary
           const imageUrl = cloudinaryResponse.secure_url;
 
           const data = model({

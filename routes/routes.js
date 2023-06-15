@@ -1,13 +1,13 @@
 
 const multer = require('multer')
+const cloudnary = require('cloudinary')
 const cloudinary = require('cloudinary').v2;
 const express = require("express");
+const upload = multer({ dest: "uploads/" })
 // const { model } = require("mongoose");
-const upload = multer({ dest: 'temp/' });
-
 const model = require('../models/model')
 
-cloudinary.config({
+cloudnary.config({
           cloud_name: "citizen",
           api_key: "373369271762559",
           api_secret: "xe1Y1WOi7P7bUFPH3riVzl0HGGU"
@@ -21,7 +21,7 @@ const router = express.Router();
 
 router.post('/post', upload.single('image'), async (req, res) => {
           try {
-            const result = await cloudinary.uploader.upload(req.file.path, {
+            const result = await cloudnary.uploader.upload(req.file.path, {
               folder: 'BLOG',
               use_filename: true,
             });
@@ -39,6 +39,37 @@ router.post('/post', upload.single('image'), async (req, res) => {
             res.status(400).json({ message: error.message });
           }
         });
+// router.post("/post", upload.single
+// ("image"), async (req, res) => {
+//           const image = req.file;
+
+//           const uploadOptions = {
+//                     folder: "BLOG", 
+//                     use_filename: true 
+//           };
+//           const cloudinaryResponse = await cloudnary.uploader.upload(image.path, uploadOptions); // Upload the image to Cloudinary
+//           const imageUrl = cloudinaryResponse.secure_url;
+
+//           const data = model({
+//                     title: req.body.title,
+//                     description: req.body.description,
+//                     image: imageUrl
+//           })
+
+//           try {
+
+
+//                     const dataToSave = await data.save()
+//                     res.status(200).json(dataToSave)
+
+
+
+//           } catch (error) {
+//                     res.status(400).json({ message: error.message })
+//           }
+
+//           // res.send("POST API")
+// })
 
 ///GET ALL DATA
 router.get("/getAll", async (req, res) => {
@@ -70,7 +101,7 @@ router.patch("/update/:id", upload.single("image"), async (req, res) => {
                               folder: "BLOG", // Specify the folder name in Cloudinary
                               use_filename: true // Use the original filename when saving to Cloudinary
                     };
-                    const cloudinaryResponse = await cloudinary.uploader.upload(req.file.path, uploadOptions); // Upload the image to Cloudinary
+                    const cloudinaryResponse = await cloudnary.uploader.upload(req.file.path, uploadOptions); // Upload the image to Cloudinary
                     const imageUrl = cloudinaryResponse.secure_url;
                     const id = req.params.id;
                     const updatedData = req.body;

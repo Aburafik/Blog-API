@@ -39,37 +39,6 @@ router.post('/post', upload.single('image'), async (req, res) => {
             res.status(400).json({ message: error.message });
           }
         });
-// router.post("/post", upload.single
-// ("image"), async (req, res) => {
-//           const image = req.file;
-
-//           const uploadOptions = {
-//                     folder: "BLOG", 
-//                     use_filename: true 
-//           };
-//           const cloudinaryResponse = await cloudnary.uploader.upload(image.path, uploadOptions); // Upload the image to Cloudinary
-//           const imageUrl = cloudinaryResponse.secure_url;
-
-//           const data = model({
-//                     title: req.body.title,
-//                     description: req.body.description,
-//                     image: imageUrl
-//           })
-
-//           try {
-
-
-//                     const dataToSave = await data.save()
-//                     res.status(200).json(dataToSave)
-
-
-
-//           } catch (error) {
-//                     res.status(400).json({ message: error.message })
-//           }
-
-//           // res.send("POST API")
-// })
 
 ///GET ALL DATA
 router.get("/getAll", async (req, res) => {

@@ -2,16 +2,29 @@
 const multer = require('multer')
 const cloudnary = require('cloudinary')
 const cloudinary = require('cloudinary').v2;
+
 const express = require("express");
-const upload = multer({ dest: "uploads/" })
 // const { model } = require("mongoose");
 const model = require('../models/model')
 
-cloudnary.config({
+const {CloudinaryStorage}=require('multer-storage-cloudinary')
+cloudinary.config({
           cloud_name: "citizen",
           api_key: "373369271762559",
           api_secret: "xe1Y1WOi7P7bUFPH3riVzl0HGGU"
 });
+const storage = new CloudinaryStorage({
+          cloudinary:cloudinary,
+          // params:{
+          //   folder:"",
+          //   allowedFormat:[
+          //           "jpg","png","jpeg"
+          //   ]
+
+          // }
+});
+const upload = multer({ storage: storage })
+
 const router = express.Router();
 
 

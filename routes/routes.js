@@ -13,16 +13,19 @@ cloudinary.config({
           api_key: "373369271762559",
           api_secret: "xe1Y1WOi7P7bUFPH3riVzl0HGGU"
 });
-const storage = new CloudinaryStorage({
-          cloudinary:cloudinary,
-          // params:{
-          //   folder:"",
-          //   allowedFormat:[
-          //           "jpg","png","jpeg"
-          //   ]
 
-          // }
-});
+// function uploadfolder(folder){
+          const storage = new CloudinaryStorage({
+                    cloudinary:cloudinary,
+                    // params:{
+                    //   folder:"",
+                    //   allowedFormat:[
+                    //           "jpg","png","jpeg"
+                    //   ]
+          
+                    // }
+          });
+// };
 const upload = multer({ storage: storage })
 
 const router = express.Router();
@@ -38,6 +41,8 @@ router.post('/post', upload.single('image'), async (req, res) => {
               folder: 'BLOG',
               use_filename: true,
             });
+            const payload=req.body;
+            console.log(payload)
             const imageUrl = result.secure_url;
         
             const data = new model({
@@ -99,6 +104,15 @@ router.get("/getOne/:id", async (req, res) => {
           try {
                     const getById = await model.findById(req.params.id)
                     res.json(getById)
+          } catch (error) {
+                    res.status(500).json({ message: error.message })
+          }
+})
+///GetBy Key Word
+router.get("/filter/:search", async (req, res) => {
+          try {
+                    const filter = await model.find({title: {$regex :req.params.search}})
+                    res.json(filter)
           } catch (error) {
                     res.status(500).json({ message: error.message })
           }

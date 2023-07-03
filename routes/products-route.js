@@ -5,7 +5,7 @@ const cloudinary = require('cloudinary').v2;
 
 const express = require("express");
 // const { model } = require("mongoose");
-const model = require('../models/model')
+const productModel = require('../models/products-model')
 
 const {CloudinaryStorage}=require('multer-storage-cloudinary')
 cloudinary.config({
@@ -38,17 +38,20 @@ const router = express.Router();
 router.post('/post', upload.single('image'), async (req, res) => {
           try {
             const result = await cloudnary.uploader.upload(req.file.path, {
-              folder: 'BLOG',
+              folder: 'PRODUCTS',
               use_filename: true,
             });
             const payload=req.body;
             console.log(payload)
             const imageUrl = result.secure_url;
         
-            const data = new model({
-              title: req.body.title,
+            const data = new productModel({
+              productName: req.body.productName,
               description: req.body.description,
+              brand:req.body.brand,
+              isFav:req.body.isFav,
               image: imageUrl,
+              price:req.body.price
             });
         
             const savedData = await data.save();
@@ -60,7 +63,7 @@ router.post('/post', upload.single('image'), async (req, res) => {
 ///GET ALL DATA
 router.get("/getAll", async (req, res) => {
           try {
-                    const getAllData = await model.find()
+                    const getAllData = await productModel.find()
                     res.json(getAllData)
           } catch (error) {
                     res.status(500).json({ message: error.message })
@@ -70,7 +73,7 @@ router.get("/getAll", async (req, res) => {
 
 router.get("/getOne/:id", async (req, res) => {
           try {
-                    const getById = await model.findById(req.params.id)
+                    const getById = await productModel.findById(req.params.id)
                     res.json(getById)
           } catch (error) {
                     res.status(500).json({ message: error.message })
@@ -79,7 +82,7 @@ router.get("/getOne/:id", async (req, res) => {
 ///GetBy Key Word
 router.get("/filter/:search", async (req, res) => {
           try {
-                    const filter = await model.find({title: {$regex :req.params.search}})
+                    const filter = await productModel.find({title: {$regex :req.params.search}})
                     res.json(filter)
           } catch (error) {
                     res.status(500).json({ message: error.message })
@@ -93,7 +96,7 @@ router.patch("/update/:id", upload.single("image"), async (req, res) => {
                    if(req.file){
 
                     const uploadOptions = {
-                              folder: "BLOG",    
+                              folder: "PRODUCTS",    
                               use_filename: true
                     };
                     const cloudinaryResponse = await cloudnary.uploader.upload(req.file.path, uploadOptions); 
@@ -103,7 +106,7 @@ router.patch("/update/:id", upload.single("image"), async (req, res) => {
                     const updatedData = req.body;
                     const options = { new: true };
                      req.body.image=imageUrl
-                    const result = await model.findByIdAndUpdate(id, updatedData, options)
+                    const result = await productModel.findByIdAndUpdate(id, updatedData, options)
                     
                     res.send(result);
                    }
@@ -120,7 +123,7 @@ router.delete("/delete/:id", async (req, res) => {
 
           try {
                     const id = req.params.id
-                    const data = await model.findByIdAndDelete(id);
+                    const data = await productModel.findByIdAndDelete(id);
                     res.send(`Document with ${data.name} has been deleted..`)
           } catch (error) {
                     res.status(400).json({ message: error.message})
